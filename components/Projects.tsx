@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Github, ExternalLink, Calendar, Code, Database, Globe, Smartphone, Cloud } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { getEndpointUrl } from '@/lib/config'
 
 interface Project {
@@ -134,15 +135,22 @@ const Projects = () => {
               >
                 {/* Project Image */}
                 <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={project.image || 'https://www.dummyimage.com/400x250/1e293b/64748b?text=Project+Image'}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    onError={(e) => {
-                      console.log('Image failed to load:', project.image); // Debug log
-                      e.currentTarget.src = 'https://www.dummyimage.com/400x250/1e293b/64748b?text=Project+Image';
-                    }}
-                  />
+                  {project.image ? (
+                    <Image 
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      onError={() => {
+                        console.log('Image failed to load:', project.image); // Debug log
+                      }}
+                      unoptimized={project.image?.includes('abdulraheem-api.vercel.app')}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                      <span className="text-gray-400 text-sm">No Image</span>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
 
