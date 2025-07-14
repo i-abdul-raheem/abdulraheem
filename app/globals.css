@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-dark-900 text-white font-sans;
+  }
+
+  /* Hide scrollbars for all elements */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  /* Hide scrollbars for WebKit browsers (Chrome, Safari, Edge) */
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Ensure scrolling still works */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* For specific scrollable containers */
+  .scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Modal scrollable content */
+  .modal-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent;
+  }
+  
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary-500/20;
+  }
+  
+  .button-primary {
+    @apply px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25;
+  }
+  
+  .button-secondary {
+    @apply px-6 py-3 border border-primary-600 text-primary-400 hover:bg-primary-600 hover:text-white font-medium rounded-lg transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} 
