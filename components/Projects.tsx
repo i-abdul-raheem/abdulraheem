@@ -10,14 +10,14 @@ interface Project {
   title: string;
   description: string;
   technologies: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-  imageUrl?: string;
-  category: string;
+  github?: string;
+  live?: string;
+  image?: string;
   featured: boolean;
-  completedDate: string;
   order: number;
-  isActive: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ProjectsSettings {
@@ -52,10 +52,12 @@ const Projects = () => {
       const response = await fetch(getEndpointUrl('projects'));
       if (response.ok) {
         const data = await response.json();
+        console.log('API Response:', data); // Debug log
         // Filter only active projects and sort by order
         const activeProjects = data.data
-          .filter((project: Project) => project.isActive)
+          .filter((project: Project) => project.status === 'active')
           .sort((a: Project, b: Project) => a.order - b.order);
+        console.log('Filtered Projects:', activeProjects); // Debug log
         setProjects(activeProjects);
       }
     } catch (error) {
@@ -129,7 +131,7 @@ const Projects = () => {
                 {/* Project Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                                         src={project.imageUrl?.startsWith('http') ? project.imageUrl : `${getEndpointUrl('images')}${project.imageUrl}`}
+                    src={project.image?.startsWith('http') ? project.image : `${getEndpointUrl('images')}${project.image}`}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     onError={(e) => {
@@ -167,11 +169,11 @@ const Projects = () => {
 
                   {/* Project Links */}
                   <div className="flex gap-3">
-                    {project.githubUrl && (
+                    {project.github && (
                       <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href={project.githubUrl}
+                        href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors"
@@ -180,11 +182,11 @@ const Projects = () => {
                         Code
                       </motion.a>
                     )}
-                    {project.liveUrl && (
+                    {project.live && (
                       <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href={project.liveUrl}
+                        href={project.live}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-2 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
