@@ -58,6 +58,10 @@ const Projects = () => {
           .filter((project: Project) => project.status === 'active')
           .sort((a: Project, b: Project) => a.order - b.order);
         console.log('Filtered Projects:', activeProjects); // Debug log
+        // Log image URLs for debugging
+        activeProjects.forEach((project: Project, index: number) => {
+          console.log(`Project ${index + 1} image:`, project.image);
+        });
         setProjects(activeProjects);
       }
     } catch (error) {
@@ -131,10 +135,11 @@ const Projects = () => {
                 {/* Project Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                    src={project.image?.startsWith('http') ? project.image : `${getEndpointUrl('images')}${project.image}`}
+                    src={project.image || 'https://www.dummyimage.com/400x250/1e293b/64748b?text=Project+Image'}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     onError={(e) => {
+                      console.log('Image failed to load:', project.image); // Debug log
                       e.currentTarget.src = 'https://www.dummyimage.com/400x250/1e293b/64748b?text=Project+Image';
                     }}
                   />
