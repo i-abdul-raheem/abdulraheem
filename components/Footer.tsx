@@ -5,6 +5,7 @@ import { Code, Github, Linkedin, Twitter, Mail, Phone, MapPin, Globe } from 'luc
 import { useState, useEffect } from 'react'
 import PrivacyPolicyModal from './PrivacyPolicyModal'
 import TermsOfServiceModal from './TermsOfServiceModal'
+import { getEndpointUrl } from '@/lib/config'
 
 interface SocialLink {
   name: string;
@@ -34,9 +35,9 @@ interface FooterData {
 
 const Footer = () => {
   const [footerData, setFooterData] = useState<FooterData>({
-    copyright: '© 2025 Your Name. All rights reserved.',
-    tagline: 'Building amazing digital experiences',
-    description: 'Passionate developer creating innovative solutions for the web.',
+    copyright: '© 2024 Abdulraheem. All rights reserved.',
+    tagline: 'Building digital experiences that matter.',
+    description: 'Full-stack developer passionate about creating innovative web applications and solving complex problems.',
     socialLinks: [],
     quickLinks: [],
     contactInfo: {
@@ -55,7 +56,7 @@ const Footer = () => {
 
   const fetchFooterData = async () => {
     try {
-      const response = await fetch('https://abdulraheem-api.vercel.app/api/footer');
+      const response = await fetch(getEndpointUrl('footer'));
       if (response.ok) {
         const data = await response.json();
         setFooterData(data.data);

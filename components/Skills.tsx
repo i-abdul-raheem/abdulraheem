@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Code, Database, Cloud, Cpu, Smartphone, Globe } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { getEndpointUrl } from '@/lib/config'
 
 interface Skill {
   name: string;
@@ -30,7 +31,7 @@ const Skills = () => {
 
   const fetchSkills = async () => {
     try {
-      const response = await fetch('https://abdulraheem-api.vercel.app/api/skills');
+      const response = await fetch(getEndpointUrl('skills'));
       if (response.ok) {
         const data = await response.json();
         // Filter only active categories and sort by order
@@ -48,7 +49,7 @@ const Skills = () => {
 
   const fetchAdditionalTechnologies = async () => {
     try {
-      const response = await fetch('https://abdulraheem-api.vercel.app/api/skills/additional-technologies');
+      const response = await fetch(`${getEndpointUrl('skills')}/additional-technologies`);
       if (response.ok) {
         const data = await response.json();
         setAdditionalTechnologies(data.data || []);

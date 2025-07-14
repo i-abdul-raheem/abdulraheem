@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Download, FileText, Eye } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { getEndpointUrl } from '@/lib/config'
 
 interface ResumeInfo {
   id: string;
@@ -21,7 +22,7 @@ const DownloadResume = () => {
 
   const fetchResumeInfo = async () => {
     try {
-      const response = await fetch('https://abdulraheem-api.vercel.app/api/resume/info')
+      const response = await fetch(getEndpointUrl('resume', 'info'))
       const data = await response.json()
       
       if (data.success && data.data) {
@@ -36,13 +37,13 @@ const DownloadResume = () => {
 
   const handleDownload = () => {
     if (resumeInfo) {
-      window.open(`https://abdulraheem-api.vercel.app/api/resume/download/${resumeInfo.id}`, '_blank')
+      window.open(`${getEndpointUrl('resume', 'download')}/${resumeInfo.id}`, '_blank')
     }
   }
 
   const handlePreview = () => {
     if (resumeInfo) {
-      window.open(`https://abdulraheem-api.vercel.app/api/resume/download/${resumeInfo.id}`, '_blank')
+      window.open(`${getEndpointUrl('resume', 'download')}/${resumeInfo.id}`, '_blank')
     }
   }
 

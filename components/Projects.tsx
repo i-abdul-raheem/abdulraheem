@@ -1,19 +1,23 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ExternalLink, Github, Eye } from 'lucide-react'
+import { Github, ExternalLink, Calendar, Code, Database, Globe, Smartphone, Cloud } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { getEndpointUrl } from '@/lib/config'
 
 interface Project {
-  _id: string
-  title: string
-  description: string
-  technologies: string[]
-  github?: string
-  live?: string
-  image?: string
-  featured: boolean
-  createdAt: string
+  _id: string;
+  title: string;
+  description: string;
+  technologies: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+  imageUrl?: string;
+  category: string;
+  featured: boolean;
+  completedDate: string;
+  order: number;
+  isActive: boolean;
 }
 
 interface ProjectsSettings {
@@ -26,7 +30,9 @@ interface ProjectsSettings {
 }
 
 const Projects = () => {
-  const [projects, setProjects] = useState<Project[]>([])
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [settings, setSettings] = useState<ProjectsSettings>({
     projectsTitle: 'Featured Projects',
     projectsSubtitle: 'A showcase of my recent work, demonstrating my skills in full-stack development and problem-solving.',
@@ -35,40 +41,41 @@ const Projects = () => {
     showViewAllButton: true,
     maxFeaturedProjects: 6
   })
-  const [loading, setLoading] = useState(true)
-
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://abdulraheem-api.vercel.app/api'
 
   useEffect(() => {
-    fetchProjects()
-    fetchProjectsSettings()
-  }, [])
+    fetchProjects();
+    fetchProjectsSettings();
+  }, []);
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(`${API_BASE}/projects?featured=true&limit=${settings.maxFeaturedProjects}`)
+      const response = await fetch(getEndpointUrl('projects'));
       if (response.ok) {
-        const data = await response.json()
-        setProjects(data.data || [])
+        const data = await response.json();
+        // Filter only active projects and sort by order
+        const activeProjects = data.data
+          .filter((project: Project) => project.isActive)
+          .sort((a: Project, b: Project) => a.order - b.order);
+        setProjects(activeProjects);
       }
     } catch (error) {
-      console.error('Error fetching projects:', error)
+      console.error('Error fetching projects:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const fetchProjectsSettings = async () => {
     try {
-      const response = await fetch(`${API_BASE}/projects/settings`)
+      const response = await fetch(getEndpointUrl('projects/settings'));
       if (response.ok) {
-        const data = await response.json()
-        setSettings(data.data || settings)
+        const data = await response.json();
+        setSettings(data.data || settings);
       }
     } catch (error) {
-      console.error('Error fetching projects settings:', error)
+      console.error('Error fetching projects settings:', error);
     }
-  }
+  };
 
   const handleViewAllProjects = () => {
     if (settings.viewAllButtonUrl.startsWith('http')) {
@@ -122,7 +129,7 @@ const Projects = () => {
                 {/* Project Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                    src={project.image?.startsWith('http') ? project.image : `${API_BASE.replace('/api', '')}${project.image}`}
+                                         src={project.imageUrl?.startsWith('http') ? project.imageUrl : `${getEndpointUrl('images')}${project.imageUrl}`}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     onError={(e) => {
@@ -160,11 +167,11 @@ const Projects = () => {
 
                   {/* Project Links */}
                   <div className="flex gap-3">
-                    {project.github && (
+                    {project.githubUrl && (
                       <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href={project.github}
+                        href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors"
@@ -173,11 +180,11 @@ const Projects = () => {
                         Code
                       </motion.a>
                     )}
-                    {project.live && (
+                    {project.liveUrl && (
                       <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href={project.live}
+                        href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-2 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
@@ -200,7 +207,7 @@ const Projects = () => {
             className="text-center py-16"
           >
             <div className="w-24 h-24 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Eye className="w-12 h-12 text-primary-400" />
+              <Cloud className="w-12 h-12 text-primary-400" />
             </div>
             <h3 className="text-2xl font-semibold text-white mb-4">No Projects Available</h3>
             <p className="text-gray-400 max-w-md mx-auto">

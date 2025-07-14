@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { getEndpointUrl } from '@/lib/config'
 
 interface ViewTrackerProps {
   page?: string
@@ -16,7 +17,7 @@ export default function ViewTracker({ page = 'home' }: ViewTrackerProps) {
         
         localStorage.setItem('sessionId', sessionId)
 
-        await fetch('https://abdulraheem-api.vercel.app/api/analytics/track-view', {
+        await fetch(getEndpointUrl('analytics', 'trackView'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

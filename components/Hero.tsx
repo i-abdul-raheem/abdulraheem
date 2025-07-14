@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { ArrowDown, Github, Linkedin, Mail, Download, Twitter, Globe } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { getEndpointUrl } from '@/lib/config'
 
 interface AboutData {
   name: string;
@@ -38,8 +39,6 @@ const Hero = () => {
   const [resumeInfo, setResumeInfo] = useState<ResumeInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://abdulraheem-api.vercel.app/api';
-
   useEffect(() => {
     fetchAboutData();
     fetchResumeInfo();
@@ -47,7 +46,7 @@ const Hero = () => {
 
   const fetchAboutData = async () => {
     try {
-      const response = await fetch(`${API_BASE}/about`);
+      const response = await fetch(getEndpointUrl('about'));
       if (response.ok) {
         const data = await response.json();
         setAboutData(data.data);
@@ -61,7 +60,7 @@ const Hero = () => {
 
   const fetchResumeInfo = async () => {
     try {
-      const response = await fetch(`${API_BASE}/resume/info`);
+      const response = await fetch(getEndpointUrl('resume', 'info'));
       const data = await response.json();
       
       console.log('Resume info response:', data); // Debug log
@@ -81,7 +80,7 @@ const Hero = () => {
 
   const handleDownloadResume = () => {
     if (resumeInfo) {
-      window.open(`${API_BASE}/resume/download/${resumeInfo.id}`, '_blank');
+      window.open(`${getEndpointUrl('resume', 'download')}/${resumeInfo.id}`, '_blank');
     }
   };
 
@@ -107,7 +106,7 @@ const Hero = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900"></div>
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
       
-      {/* Floating Elements */}
+      {/* Floating Elements - Hidden on mobile, visible on larger screens */}
       <motion.div
         animate={{ 
           y: [0, -20, 0],
@@ -118,7 +117,7 @@ const Hero = () => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-20 left-20 w-32 h-32 bg-primary-500/10 rounded-full blur-xl"
+        className="absolute top-20 left-20 w-32 h-32 bg-primary-500/10 rounded-full blur-xl hidden md:block"
       ></motion.div>
       
       <motion.div
@@ -131,7 +130,7 @@ const Hero = () => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute bottom-20 right-20 w-40 h-40 bg-primary-600/10 rounded-full blur-xl"
+        className="absolute bottom-20 right-20 w-40 h-40 bg-primary-600/10 rounded-full blur-xl hidden md:block"
       ></motion.div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -139,14 +138,14 @@ const Hero = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="space-y-8"
+          className="space-y-4 sm:space-y-6 md:space-y-8"
         >
           {/* Greeting */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-primary-400 font-mono text-lg"
+            className="text-primary-400 font-mono text-sm sm:text-base md:text-lg"
           >
             Hello, I'm
           </motion.p>
@@ -156,7 +155,7 @@ const Hero = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
           >
             <span className="gradient-text">{aboutData.name}</span>
           </motion.h1>
@@ -166,7 +165,7 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-2xl md:text-3xl text-primary-400 font-semibold"
+            className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-primary-400 font-semibold"
           >
             {aboutData.title}
           </motion.h2>
@@ -177,7 +176,7 @@ const Hero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
+              className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4"
             >
               {aboutData.subtitle}
             </motion.p>
@@ -188,7 +187,7 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="text-lg text-gray-400 max-w-4xl mx-auto leading-relaxed"
+            className="text-sm sm:text-base md:text-lg text-gray-400 max-w-4xl mx-auto leading-relaxed px-4"
           >
             {aboutData.description}
           </motion.p>
@@ -198,11 +197,11 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="flex flex-wrap justify-center gap-4 text-sm text-gray-400"
+            className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm text-gray-400 px-4"
           >
             {aboutData.technologyTags && aboutData.technologyTags.length > 0 ? (
               aboutData.technologyTags.map((tech, index) => (
-                <span key={index} className="px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                <span key={index} className="px-2 sm:px-3 py-1 bg-white/5 rounded-full border border-white/10">
                   {tech}
                 </span>
               ))
@@ -218,15 +217,15 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4"
           >
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="button-primary flex items-center gap-2"
+              className="button-primary flex items-center gap-2 w-full sm:w-auto justify-center"
               onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <Mail className="w-5 h-5" />
+              <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
               Get In Touch
             </motion.button>
             
@@ -234,10 +233,10 @@ const Hero = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="button-secondary flex items-center gap-2"
+                className="button-secondary flex items-center gap-2 w-full sm:w-auto justify-center"
                 onClick={handleDownloadResume}
               >
-                <Download className="w-5 h-5" />
+                <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                 Download CV
               </motion.button>
             )}
@@ -248,7 +247,7 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="flex justify-center gap-6"
+            className="flex justify-center gap-4 sm:gap-6 px-4"
           >
             {aboutData.github && (
               <motion.a
@@ -257,7 +256,7 @@ const Hero = () => {
                 href={aboutData.github} target="_blank" rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary-400 transition-colors duration-300"
               >
-                <Github className="w-6 h-6" />
+                <Github className="w-5 h-5 sm:w-6 sm:h-6" />
               </motion.a>
             )}
             {aboutData.linkedin && (
@@ -267,7 +266,7 @@ const Hero = () => {
                 href={aboutData.linkedin} target="_blank" rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary-400 transition-colors duration-300"
               >
-                <Linkedin className="w-6 h-6" />
+                <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />
               </motion.a>
             )}
             {aboutData.twitter && (
@@ -277,7 +276,7 @@ const Hero = () => {
                 href={aboutData.twitter} target="_blank" rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary-400 transition-colors duration-300"
               >
-                <Twitter className="w-6 h-6" />
+                <Twitter className="w-5 h-5 sm:w-6 sm:h-6" />
               </motion.a>
             )}
             {aboutData.website && (
@@ -287,7 +286,7 @@ const Hero = () => {
                 href={aboutData.website} target="_blank" rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary-400 transition-colors duration-300"
               >
-                <Globe className="w-6 h-6" />
+                <Globe className="w-5 h-5 sm:w-6 sm:h-6" />
               </motion.a>
             )}
           </motion.div>
@@ -298,7 +297,7 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="absolute -bottom-12 left-1/2 transform -translate-x-1/2"
+          className="absolute -bottom-8 sm:-bottom-12 left-1/2 transform -translate-x-1/2"
         >
           <motion.button
             animate={{ y: [0, 10, 0] }}
@@ -306,7 +305,7 @@ const Hero = () => {
             onClick={scrollToAbout}
             className="text-gray-400 hover:text-primary-400 transition-colors duration-300"
           >
-            <ArrowDown className="w-6 h-6" />
+            <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6" />
           </motion.button>
         </motion.div>
       </div>
